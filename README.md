@@ -9,7 +9,7 @@ pip install datasets
 ## A simple try
 export LOG_DIR_NAME=MnistTry
 mkdir logs/$LOG_DIR_NAME -p
-python ./train.py --config configs/config_mnist_transformer.json --name logs/$LOG_DIR_NAME/$LOG_DIR_NAME
+python ./train.py --config configs/config_mnist_transformer.json --name logs/$LOG_DIR_NAME/
 
 
 # k-diffusion
