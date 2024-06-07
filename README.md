@@ -1,3 +1,17 @@
+# Record
+## Installation
+conda create -n k-diffusion python=3.9
+conda activate k-diffusion
+pip install -e .
+pip install datasets
+
+
+## A simple try
+export LOG_DIR_NAME=MnistTry
+mkdir logs/$LOG_DIR_NAME -p
+python ./train.py --config configs/config_mnist_transformer.json --name logs/$LOG_DIR_NAME/$LOG_DIR_NAME
+
+
 # k-diffusion
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10284390.svg)](https://doi.org/10.5281/zenodo.10284390)
