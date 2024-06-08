@@ -361,6 +361,7 @@ def main():
             model_fn = make_cfg_model_fn(model_ema)
         sigmas = K.sampling.get_sigmas_karras(50, sigma_min, sigma_max, rho=7., device=device)
         x_0 = K.sampling.sample_dpmpp_2m_sde(model_fn, x, sigmas, extra_args=extra_args, eta=0.0, solver_type='heun', disable=not accelerator.is_main_process)
+        # x_0 = K.sampling.sample_euler(model_fn, x, sigmas)
         x_0 = accelerator.gather(x_0)[:args.sample_n]
         if accelerator.is_main_process:
             grid = utils.make_grid(x_0, nrow=math.ceil(args.sample_n ** 0.5), padding=0)
@@ -443,6 +444,15 @@ def main():
 
                 with accelerator.accumulate(model):
                     reals, _, aug_cond = batch[image_key]
+                    '''
+                    batch[image_key][0]: real images; BCHW
+                    batch[image_key][1]: ?
+                    batch[image_key][2]: augmentation conditions; BxClasses. why this?
+                    '''
+                    # torchvision.utils.save_image(reals, 'vis/real.png', normalize=True, nrow=8)
+                    # import torchvision
+                    # import numpy as np
+                    # from matplotlib import pyplot as plt
                     class_cond, extra_args = None, {}
                     if num_classes:
                         class_cond = batch[class_key]
@@ -450,8 +460,14 @@ def main():
                         class_cond.masked_fill_(drop < cond_dropout_rate, num_classes)
                         extra_args['class_cond'] = class_cond
                     noise = torch.randn_like(reals)
+                    # torchvision.utils.save_image(noise, 'vis/noise.png', normalize=True, nrow=8)
                     with K.utils.enable_stratified_accelerate(accelerator, disable=args.gns):
                         sigma = sample_density([reals.shape[0]], device=device)
+                        # plt.figure()
+                        # sigma_vis = sample_density([10000], device=device).cpu().numpy()
+                        # sigma_vis = np.clip(sigma_vis, sigma_min, sigma_max)
+                        # plt.hist(sigma_vis, bins=100)
+                        # plt.savefig('vis/sigma.png')
                     with K.models.checkpointing(args.checkpointing):
                         losses = model.loss(reals, noise, sigma, aug_cond=aug_cond, **extra_args)
                     loss = accelerator.gather(losses).mean().item()

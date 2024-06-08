@@ -7,9 +7,12 @@ pip install datasets
 
 
 ## A simple try
-export LOG_DIR_NAME=MnistTry
+export LOG_DIR_NAME=MnistTry2
 mkdir logs/$LOG_DIR_NAME -p
-python ./train.py --config configs/config_mnist_transformer.json --name logs/$LOG_DIR_NAME/
+# debug
+python ./train.py --config configs/config_cifar10.json --name logs/$LOG_DIR_NAME/
+# debug demo
+python ./train.py --config configs/config_cifar10.json --name logs/$LOG_DIR_NAME/ --demo-every 50
 
 
 # k-diffusion

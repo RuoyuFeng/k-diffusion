@@ -263,6 +263,13 @@ def make_sample_density(config):
         image_d = sd_config.get('image_d', max(config['input_size']))
         noise_d_low = sd_config.get('noise_d_low', 32)
         noise_d_high = sd_config.get('noise_d_high', max(config['input_size']))
+        '''
+        min_value: 0.001
+        max_value: 1000
+        image_d: 32
+        noise_d_low: 32
+        noise_d_high: 32
+        '''
         return partial(utils.rand_cosine_interpolated, image_d=image_d, noise_d_low=noise_d_low, noise_d_high=noise_d_high, sigma_data=sigma_data, min_value=min_value, max_value=max_value)
 
     raise ValueError('Unknown sample density type')

@@ -44,6 +44,7 @@ def get_sigmas_vp(n, beta_d=19.9, beta_min=0.1, eps_s=1e-3, device='cpu'):
 
 
 def to_d(x, sigma, denoised):
+    # import pdb; pdb.set_trace()
     """Converts a denoiser output to a Karras ODE derivative."""
     return (x - denoised) / utils.append_dims(sigma, x.ndim)
 
@@ -130,6 +131,11 @@ def sample_euler(model, x, sigmas, extra_args=None, callback=None, disable=None,
         if callback is not None:
             callback({'x': x, 'i': i, 'sigma': sigmas[i], 'sigma_hat': sigma_hat, 'denoised': denoised})
         dt = sigmas[i + 1] - sigma_hat
+        # import pdb; pdb.set_trace()
+        # import matplotlib.pyplot as plt
+        # plt.figure()
+        # plt.hist(x[0].cpu().numpy().flatten(), bins=100)
+        # plt.savefig(f'vis/sampling/x_{i}.png')
         # Euler method
         x = x + d * dt
     return x
