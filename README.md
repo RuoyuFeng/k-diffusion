@@ -1,4 +1,4 @@
-# Record
+# Ruoyu Record
 ## Installation
 conda create -n k-diffusion python=3.9
 conda activate k-diffusion
@@ -7,13 +7,14 @@ pip install datasets
 
 
 ## A simple try
-export LOG_DIR_NAME=MnistTry2
+export LOG_DIR_NAME=MnistTry3
 mkdir logs/$LOG_DIR_NAME -p
-# debug
+### debug
 python ./train.py --config configs/config_cifar10.json --name logs/$LOG_DIR_NAME/
-# debug demo
+### debug - check demo
 python ./train.py --config configs/config_cifar10.json --name logs/$LOG_DIR_NAME/ --demo-every 50
-
+### debug - check training results
+python ./train.py --config configs/config_cifar10.json --name logs/$LOG_DIR_NAME/ --save-every 100000
 
 # k-diffusion
 
